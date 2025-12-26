@@ -6,7 +6,7 @@
  * to available sensors in a main dta polling loop for real-time communication.
 */
 
-#include "beamngStream.h"
+#include "beamng/beamngStream.h"
 
 #include <iostream>
 #include <chrono>
@@ -16,40 +16,32 @@ int main() {
     int og_port = 4444; 
     int ms_port = 4445;
 
-    BeamNGStream stream(og_port, ms_port);
-    std::cout << "sizeof(MotionSimPacket) = " << sizeof(MotionSimPacket) << "\n";
-    std::cout << "sizeof(OutGaugePacket) = " << sizeof(OutGaugePacket) << "\n";
+    BeamNgStream stream(og_port, ms_port);
 
     // bind to OutGauge
-    if (stream.bindOutGauge()) {
-        std::cout << "OUTGAUGE BOUND ON PORT " << og_port << std::endl;
-    }
-
-    // bind to MotionSim
-    if (stream.bindMotionSim()) {
-        std::cout << "MOTIONSIM BOUND ON PORT " << ms_port << std::endl;
+    if (!stream.init()) {
+        std::cerr << "COULD NOT INITIALIZE BEAMNG DATASTREAM!" << std::endl;
+        return 1;
     }
 
     while (1) {
-        {
-            OutGaugePacket og = stream.pollVehicleOutGauge();
+        stream.poll();
 
-            std::cout << "[OutGauge] "
-                      << "Speed: " << og.speed << " m/s, "
-                      << "RPM: " << og.rpm << ", "
-                      << "Gear: " << int(og.gear) << "\n";
-        }
+        const OutGaugePacket& og = stream.latestOutGauge();
 
-        {
-            MotionSimPacket ms = stream.pollVehicleMotionSim();
+        std::cout << "[OutGauge] "
+                  << "Speed: " << og.speed << " m/s, "
+                  << "RPM: " << og.rpm << ", "
+                  << "Gear: " << int(og.gear) << std::endl;
 
-            std::cout << "[MotionSim] "
-                      << "Pos: (" << ms.posX << ", " << ms.posY << ", " << ms.posZ << "), "
-                      << "Vel: (" << ms.velX << ", " << ms.velY << ", " << ms.velZ << "), "
-                      << "Roll: " << ms.rollPos
-                      << " Pitch: " << ms.pitchPos
-                      << " Yaw: " << ms.yawPos << "\n";
-        }
+        const MotionSimPacket& ms = stream.latestMotionSim();
+
+        std::cout << "[MotionSim] "
+                  << "Pos: (" << ms.posX << ", " << ms.posY << ", " << ms.posZ << "), "
+                  << "Vel: (" << ms.velX << ", " << ms.velY << ", " << ms.velZ << "), "
+                  << "Roll: " << ms.rollPos
+                  << " Pitch: " << ms.pitchPos
+                  << " Yaw: " << ms.yawPos << "\n";
     }
     
     return 0;

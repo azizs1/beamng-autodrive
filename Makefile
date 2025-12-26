@@ -7,9 +7,8 @@ CXX := clang++
 CXXFLAGS := -std=c++20 -Wall -Wextra -Iinclude -pthread
 
 TARGET = beamng-autodrive
-OBJS = \
-	src/main.o \
-	src/beamngStream.o \
+SRC := $(wildcard src/*.cpp src/*/*.cpp)
+OBJS = $(SRC:%.cpp=%.o)
 
 .PHONY: all clean
 
