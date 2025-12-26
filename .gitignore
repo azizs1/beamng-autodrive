@@ -1,0 +1,7 @@
+# directories
+build/
+.vscode/
+
+# files
+*.o
+beamng-autodrive
