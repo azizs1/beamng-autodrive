@@ -2,11 +2,14 @@
 
 #include "beamng/outGaugeReceiver.h"
 #include "beamng/motionSimReceiver.h"
+#include "beamng/cameraReceiver.h"
+
+#include <opencv2/opencv.hpp>
 
 class BeamNgStream {
 public:
     /* Ctor */
-    BeamNgStream(int outGaugePort, int motionSimPort);
+    BeamNgStream(int outGaugePort, int motionSimPort, std::string camUrl);
     
     /* Dtor */
     ~BeamNgStream() = default;
@@ -31,6 +34,12 @@ public:
     * @return most recent MotionSim
     */
     const MotionSimPacket& latestMotionSim() const;
+    
+    /*
+    * Getter for last camera frame
+    * @return most recent frame
+    */
+    const cv::Mat& latestCameraFrame() const;
 
 private:
     /* Receiver for OutGauge data */
@@ -38,4 +47,7 @@ private:
     
     /* Receiver for MotionSim data */
     MotionSimReceiver ms_recv;
+
+    /* Receiver for Camera frames */
+    CameraReceiver cam_recv;
 };

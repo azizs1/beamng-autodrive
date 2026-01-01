@@ -4,7 +4,8 @@
 #       https://github.com/amjadmajid/Makefile
 # use := instead of = to immediately expand variables: https://www.gnu.org/software/make/manual/html_node/Flavors.html#Flavors
 CXX := clang++
-CXXFLAGS := -std=c++20 -Wall -Wextra -Iinclude -pthread
+CXXFLAGS := -std=c++20 -Wall -Wextra -Iinclude -pthread `pkg-config --cflags opencv4` -Wno-deprecated-anon-enum-enum-conversion
+LDFLAGS := `pkg-config --libs opencv4`
 
 TARGET = beamng-autodrive
 SRC := $(wildcard src/*.cpp src/*/*.cpp)
@@ -15,7 +16,7 @@ OBJS = $(SRC:%.cpp=%.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(OBJS) -o $@
+	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 
 src/%.o: src/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

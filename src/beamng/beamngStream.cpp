@@ -9,11 +9,11 @@
 #include <unistd.h>
 #include <cstring>
 
-BeamNgStream::BeamNgStream(int outGaugePort, int motionSimPort) 
-    : og_recv(outGaugePort), ms_recv(motionSimPort) {}
+BeamNgStream::BeamNgStream(int outGaugePort, int motionSimPort, std::string camUrl) 
+    : og_recv(outGaugePort), ms_recv(motionSimPort), cam_recv(camUrl) {}
     
 bool BeamNgStream::init() {
-    if (og_recv.init() && ms_recv.init()) {
+    if (og_recv.init() && ms_recv.init()  && cam_recv.init()) {
         return true;
     }
     return false;
@@ -22,6 +22,7 @@ bool BeamNgStream::init() {
 void BeamNgStream::poll() {
     og_recv.poll();
     ms_recv.poll();
+    cam_recv.poll();
 }
 
 const OutGaugePacket& BeamNgStream::latestOutGauge() const {
@@ -32,4 +33,8 @@ const MotionSimPacket& BeamNgStream::latestMotionSim() const {
     return ms_recv.getLastPacket();
 }
 
-// TODO: need to add for camera, lidar, and others as needed
+const cv::Mat& BeamNgStream::latestCameraFrame() const {
+    return cam_recv.getLastFrame();
+}
+
+// TODO: need to add for lidar, and others as needed

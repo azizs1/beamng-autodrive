@@ -1,7 +1,6 @@
 // This is taken almost directly from https://documentation.beamng.com/modding/protocols/
 #pragma once
 #include <cstdint>
-#include <cstddef>
 
 // https://stackoverflow.com/questions/3318410/pragma-pack-effect
 // does not work without this
