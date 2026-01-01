@@ -1,6 +1,7 @@
 # directories
 build/
 .vscode/
+vcpkg_installed/
 
 # files
 *.o
