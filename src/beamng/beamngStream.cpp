@@ -3,12 +3,6 @@
 // https://docs.oracle.com/cd/E19120-01/open.solaris/817-4415/sockets-18552/index.html
 #include "beamng/beamngStream.h"
 
-#include <sys/socket.h>
-#include <iostream>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <cstring>
-
 BeamNgStream::BeamNgStream(int outGaugePort, int motionSimPort, std::string camUrl) 
     : og_recv(outGaugePort), ms_recv(motionSimPort), cam_recv(camUrl) {}
     

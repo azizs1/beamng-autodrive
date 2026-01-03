@@ -19,3 +19,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 # equivalent to -pthread
 find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
+
+# https://stackoverflow.com/questions/6120511/cmake-use-add-custom-command-to-copy-binary-to-specific-location-failed-when-lo
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:${PROJECT_NAME}>
+    ${CMAKE_SOURCE_DIR}/beamng-autodrive
+)
